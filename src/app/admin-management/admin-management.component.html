@@ -1,0 +1,31 @@
+<div
+  class="container"
+  *blockUI="
+    'user-loader';
+    message: loaderMessage;
+    template: blockUiTemplateComponent
+  "
+>
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Почта</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Права</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of userList">
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.userName }}</td>
+            <td>{{ user.roles.join(", ") }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

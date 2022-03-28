@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap/dist/css/bootstrap.css";
+@import '~ngx-toastr/toastr';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+.block-ui-wrapper{
+  background: transparent !important;
+}

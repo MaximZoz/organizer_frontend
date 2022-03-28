@@ -1,0 +1,10 @@
+a.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.right {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}

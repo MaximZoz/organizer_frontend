@@ -1,0 +1,41 @@
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  td,
+  th {
+    border: 1px solid black;
+    padding: 0.5em 1rem;
+  }
+
+  td {
+    background: gainsboro !important;
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &.disabled {
+      opacity: 0.5;
+      background: bisque !important;
+    }
+    &.selected {
+      background: palegoldenrod !important;
+    }
+    &.active  {
+      background: mistyrose !important;
+    }
+
+    &:hover:not(.disabled) {
+      background: wheat !important;
+      cursor: pointer !important;
+    }
+  }
+
+  .active {
+    color: green;
+    font-weight: bold;
+  }
+
+  .selected {
+    color: blue;
+  }
+}

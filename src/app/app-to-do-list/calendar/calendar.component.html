@@ -1,0 +1,33 @@
+
+<div class="row justify-content-center">
+  <div class="col-10">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Понедельник</th>
+          <th scope="col">Вторник</th>
+          <th scope="col">Среда</th>
+          <th scope="col">Четверг</th>
+          <th scope="col">Пятница</th>
+          <th scope="col">Суббота</th>
+          <th scope="col">Воскресенье</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let week of calendar">
+          <td
+            *ngFor="let day of week.days"
+            [class.disabled]="day.disabled"
+            [class.selected]="day.selected"
+            [class.active]="day.active"
+            (click)="select(day)"
+          >
+            <span [class.selected]="day.selected" [class.active]="day.active">
+              {{ day.value | moment: " DD" }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
