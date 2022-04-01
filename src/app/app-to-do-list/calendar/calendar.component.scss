@@ -18,10 +18,10 @@ table {
       background: bisque !important;
     }
     &.selected {
-      background: palegoldenrod !important;
+      background: rgb(238, 224, 75) !important;
     }
-    &.active  {
-      background: mistyrose !important;
+    &.active {
+      background: rgb(6, 220, 6) !important;
     }
 
     &:hover:not(.disabled) {
@@ -31,7 +31,7 @@ table {
   }
 
   .active {
-    color: green;
+    color: black;
     font-weight: bold;
   }
 

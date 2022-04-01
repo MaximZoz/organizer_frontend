@@ -20,6 +20,6 @@ export class User {
 export class Task {
   id?: string;
   title: string;
-  date?: string;
+  date?: string | Date | moment.Moment;
   userId?: string;
 }

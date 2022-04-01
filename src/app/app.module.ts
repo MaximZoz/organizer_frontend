@@ -20,6 +20,7 @@ import { CalendarComponent } from './app-to-do-list/calendar/calendar.component'
 import { SelectorComponent } from './app-to-do-list/selector/selector.component';
 import { OrganaizerComponent } from './app-to-do-list/organaizer/organaizer.component';
 import { MomentPipe } from './pipes/moment.pipe';
+import { SortPipe } from './pipes/sort.pipe';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MomentPipe } from './pipes/moment.pipe';
     BlockUiTemplateComponent,
     AllUserManagementComponent,
     AppToDoListComponent,
+    SortPipe,
   ],
   imports: [
     OrganaizerModule,

@@ -8,6 +8,7 @@ import { Constants } from '../Helper/constants';
 import { Role } from '../Models/role';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -116,16 +117,64 @@ export class UserService {
       );
   }
 
-  public create(task: Task): Observable<Task> {
+  public create(task: Task, date: string): Observable<Task> {
     const body = new Task();
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     body.title = task.title;
     body.userId = userInfo.id;
-    body.date = new Date().toLocaleDateString();
+    body.date = moment(date, 'DD.MM.YYYY').add(1, 'd').toDate();
+    body.id = task.id;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${userInfo?.token}`,
     });
     return this.httpClient.post<Task>(`${this.baseURL}Tasks`, body, {
+      headers: headers,
+    });
+  }
+
+  public getTasks(date): Observable<Task[]> {
+    let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${userInfo?.token}`,
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.httpClient
+      .get<any>(`${this.baseURL}Tasks/${userInfo.id}/${date}`, {
+        headers: headers,
+      })
+      .pipe(
+        map((res) => {
+          return res.dateSet;
+        })
+      );
+  }
+  public getTaskMonth(date): Observable<Task[]> {
+    let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${userInfo?.token}`,
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.httpClient
+      .get<any>(`${this.baseURL}GetTaskMonth/${userInfo.id}/${date}`, {
+        headers: headers,
+      })
+      .pipe(
+        map((res) => {
+          return res.dateSet;
+        })
+      );
+  }
+
+  public removeTasks(id) {
+    let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${userInfo?.token}`,
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.httpClient.delete<any>(`${this.baseURL}Tasks/${id}`, {
       headers: headers,
     });
   }
