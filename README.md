@@ -11,3 +11,6 @@
 
 ### перейти в .../organizer_frontend 
 - npm run start
+- 
+### в браузере
+- http://localhost:4200/
