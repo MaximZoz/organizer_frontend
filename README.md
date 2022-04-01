@@ -9,5 +9,5 @@
 ### Установить angular-cli:
 - npm install -g @angular/cli
 
-### перейти в ...organizer/Web_Token_auth 
+### перейти в .../organizer_frontend 
 - npm run start
