@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../Models/user';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BlockUiTemplateComponent } from '../sharedModule/block-ui-template/block-ui-template.component';
+import { Constants } from '../Helper/constants';
 
 @Component({
   selector: 'app-user-management',
@@ -10,6 +11,7 @@ import { BlockUiTemplateComponent } from '../sharedModule/block-ui-template/bloc
   styleUrls: ['./user-management.component.scss'],
 })
 export class UserManagementComponent implements OnInit {
+  userName: string;
   @BlockUI('user-loader') blockUI: NgBlockUI;
   public blockUiTemplateComponent = BlockUiTemplateComponent;
   public loaderMessage: string = 'Загрузка';
@@ -18,6 +20,10 @@ export class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUser();
+
+    this.userName = JSON.parse(
+      localStorage.getItem(Constants.USER_KEY)
+    ).userName;
   }
 
   getAllUser() {

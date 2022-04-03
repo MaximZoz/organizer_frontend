@@ -1,22 +1,29 @@
-<div class="container  m-5">
+<div class="container m-5">
   <div class="row justify-content-center">
     <div class="col-6">
       <div class="card">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <div class="card-body">
+          <div class="card-body needs-validation">
             <h5 class="card-title text-center">Вход</h5>
-            <div class="mb-3 row">
+            <div class="mb-3 row has-validation">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Почта</label
               >
               <div class="col-sm-10">
                 <input
+                  [ngClass]="{
+                    'is-invalid':
+                      loginForm.get('email').invalid &&
+                      loginForm.get('email').touched,
+                    'is-valid': loginForm.get('email').valid
+                  }"
                   type="text"
                   formControlName="email"
                   class="form-control"
                   id="staticEmail"
                   value=""
                 />
+                <div class="invalid-feedback">email не может быть пустым</div>
               </div>
             </div>
             <div class="mb-3 row">
@@ -25,23 +32,51 @@
               >
               <div class="col-sm-10">
                 <input
+                  pattern="^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{6,}$"
+                  [ngClass]="{
+                    'is-invalid':
+                      loginForm.get('password').invalid &&
+                      loginForm.get('password').touched,
+                    'is-valid': loginForm.get('password').valid
+                  }"
                   type="password"
                   formControlName="password"
                   class="form-control"
                   id="inputPassword"
+                  autocomplete="on"
                 />
+                <div
+                  *ngIf="
+                    loginForm.get('password').invalid &&
+                    loginForm.get('password').touched &&
+                    loginForm.get('password').errors.required
+                  "
+                  class="invalid-feedback"
+                >
+                  пароль не может быть пустым
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    loginForm.get('password').invalid &&
+                    loginForm.get('password').touched &&
+                    loginForm.get('password').errors.pattern
+                  "
+                >
+                  Введите пароль в формате [aA!111111]
+                </div>
               </div>
             </div>
-          </div>
-          <div class="d-flex flex-row-reverse bd-highlight">
-            <div class="p-2 bd-highlight">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                [disabled]="!loginForm.valid"
-              >
-                Войти
-              </button>
+            <div class="d-flex flex-row-reverse bd-highlight">
+              <div class="p-2 bd-highlight">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="!loginForm.valid"
+                >
+                  Войти
+                </button>
+              </div>
             </div>
           </div>
         </form>

@@ -1,8 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { DateService } from 'src/app/services/date.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/Models/user';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { isUndefined } from 'lodash';
 
 @Component({
   selector: 'app-selector',
@@ -10,6 +14,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./selector.component.scss'],
 })
 export class SelectorComponent implements OnInit, OnDestroy {
+  @Input() selectedUserId;
   private subscriptions: Subscription[] = [];
   dayQuantities: any;
   constructor(
@@ -18,8 +23,12 @@ export class SelectorComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.getDayQuantities();
+    if (!isUndefined(this.selectedUserId)) {
+      this.getDayQuantities();
+    }
   }
+
+  ngOnChanges() {}
 
   ngOnDestroy() {
     this.subscriptions.forEach((s) => s.unsubscribe());
@@ -32,7 +41,10 @@ export class SelectorComponent implements OnInit, OnDestroy {
 
   getDayQuantities() {
     const userService$ = this.userService
-      .getTaskMonth(this.dateService.date.value.format('DD.MM.YYYY'))
+      .getTaskMonth(
+        this.dateService.date.value.format('DD.MM.YYYY'),
+        this.selectedUserId
+      )
       .subscribe((dayQuantities) => {
         this.dayQuantities = dayQuantities;
         this.dateService.dayQuantities.next(dayQuantities);

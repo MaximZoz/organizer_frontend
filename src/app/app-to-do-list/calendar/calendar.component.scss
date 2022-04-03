@@ -17,11 +17,11 @@ table {
       opacity: 0.5;
       background: bisque !important;
     }
-    &.selected {
-      background: rgb(238, 224, 75) !important;
-    }
     &.active {
-      background: rgb(6, 220, 6) !important;
+      background: rgb(228, 247, 27) !important;
+    }
+    &.selected {
+      background: rgb(94, 238, 75) !important;
     }
 
     &:hover:not(.disabled) {
@@ -33,6 +33,7 @@ table {
   .active {
     color: black;
     font-weight: bold;
+
   }
 
   .selected {

@@ -1,9 +1,19 @@
-<div class="container">
+<div class="container mt-5">
+  <form [formGroup]="form" *ngIf="isAdmin">
+    <p>
+      <select formControlName="name" class="form-select">
+        <option *ngFor="let user of userList; index as index" [ngValue]="user">
+          {{ user.fullName }}
+        </option>
+      </select>
+    </p>
+  </form>
+
   <header class="header">
-    <app-selector></app-selector>
+    <app-selector [selectedUserId]="selectedUserId"></app-selector>
   </header>
   <main>
     <app-calendar></app-calendar>
   </main>
-  <div><app-organaizer></app-organaizer></div>
+  <div><app-organaizer [selectedUserId]="selectedUserId"></app-organaizer></div>
 </div>

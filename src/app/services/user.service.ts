@@ -7,13 +7,15 @@ import { Task, User } from '../Models/user';
 import { Constants } from '../Helper/constants';
 import { Role } from '../Models/role';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
+import { isUndefined } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  public userEmail: string;
   private readonly baseURL: string = 'https://localhost:5001/api/user/';
   constructor(private httpClient: HttpClient, private toastr: ToastrService) {}
 
@@ -59,7 +61,14 @@ export class UserService {
             if (res.dateSet) {
               res.dateSet.map((x: User) => {
                 userList.push(
-                  new User(x.fullName, x.email, x.userName, x.roles)
+                  new User(
+                    x.fullName,
+                    x.email,
+                    x.userName,
+                    x.roles,
+                    x.quantityNotes,
+                    x.id
+                  )
                 );
               });
             }
@@ -83,8 +92,16 @@ export class UserService {
             if (res.dateSet) {
               res.dateSet.map((x: User) => {
                 userList.push(
-                  new User(x.fullName, x.email, x.userName, x.roles)
+                  new User(
+                    x.fullName,
+                    x.email,
+                    x.userName,
+                    x.roles,
+                    x.quantityNotes,
+                    x.id
+                  )
                 );
+                userList.sort((b, a) => +b.quantityNotes - +a.quantityNotes);
               });
             }
           } else {
@@ -117,11 +134,11 @@ export class UserService {
       );
   }
 
-  public create(task: Task, date: string): Observable<Task> {
+  public create(task: Task, date: string, id?): Observable<Task> {
     const body = new Task();
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     body.title = task.title;
-    body.userId = userInfo.id;
+    body.userId = isUndefined(id) ? userInfo.id : id;
     body.date = moment(date, 'DD.MM.YYYY').add(1, 'd').toDate();
     body.id = task.id;
     const headers = new HttpHeaders({
@@ -132,15 +149,15 @@ export class UserService {
     });
   }
 
-  public getTasks(date): Observable<Task[]> {
+  public getTasks(date, id?): Observable<Task[]> {
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     const headers = new HttpHeaders({
       Authorization: `Bearer ${userInfo?.token}`,
       'Access-Control-Allow-Origin': '*',
     });
-
+    const userId = isUndefined(id) ? userInfo.id : id;
     return this.httpClient
-      .get<any>(`${this.baseURL}Tasks/${userInfo.id}/${date}`, {
+      .get<any>(`${this.baseURL}Tasks/${userId}/${date}`, {
         headers: headers,
       })
       .pipe(
@@ -149,15 +166,16 @@ export class UserService {
         })
       );
   }
-  public getTaskMonth(date): Observable<Task[]> {
+  public getTaskMonth(date, id?): Observable<Task[]> {
+    console.log('🚀 ~ id', id)
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     const headers = new HttpHeaders({
       Authorization: `Bearer ${userInfo?.token}`,
       'Access-Control-Allow-Origin': '*',
     });
-
+    const userId = isUndefined(id) ? userInfo.id : id;
     return this.httpClient
-      .get<any>(`${this.baseURL}GetTaskMonth/${userInfo.id}/${date}`, {
+      .get<any>(`${this.baseURL}GetTaskMonth/${userId}/${date}`, {
         headers: headers,
       })
       .pipe(

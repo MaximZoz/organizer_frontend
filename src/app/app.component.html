@@ -51,9 +51,9 @@
             <a
               class="nav-link active"
               aria-current="page"
-              *ngIf="isUserlogin && isUser"
+              *ngIf="isUserlogin"
               routerLink="/to-do-list"
-              >органайзер
+              >{{isAdmin?"назначить задачи":"активные задачи"}}
             </a>
           </li>
         </ul>

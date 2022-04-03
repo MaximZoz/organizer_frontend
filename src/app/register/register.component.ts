@@ -1,12 +1,22 @@
 import { ResponseModel } from './../Models/responseModel';
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import {
+  Validators,
+  FormBuilder,
+  AbstractControl,
+  ValidatorFn,
+} from '@angular/forms';
 import { Role } from '../Models/role';
 import { UserService } from '../services/user.service';
 import { ResponseCode } from '../enums/responseCode';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
+export function WrongEmail(arr: any[]): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return !arr.includes(control?.value) ? null : { wrongEmail: true };
+  };
+}
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -14,10 +24,11 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   public roles: Role[] = [];
+  invalidEmails = [];
   public registerForm = this.formBuilder.group({
     fullName: ['', [Validators.required]],
     email: ['', [Validators.email, Validators.required]],
-    password: ['', Validators.required],
+    password: ['', [Validators.required, Validators.pattern]],
   });
   constructor(
     private router: Router,
@@ -43,20 +54,31 @@ export class RegisterComponent implements OnInit {
       .subscribe(
         (data: ResponseModel) => {
           if (data.responseCode == ResponseCode.OK) {
+            this.roles.forEach((x) => (x.isSelected = false));
+            this.toastr.success(
+              `Вы создали учетную запись, теперь можно войти под ${this.registerForm.controls['email'].value}`
+            );
             this.registerForm.controls['fullName'].setValue('');
             this.registerForm.controls['email'].setValue('');
             this.registerForm.controls['password'].setValue('');
-            this.roles.forEach((x) => (x.isSelected = false));
-            this.toastr.success('You have created account please login');
             this.router.navigate(['login']);
           } else {
-            this.toastr.error(data.dateSet[0]);
+            if (data.dateSet[0].includes('is already taken')) {
+              this.toastr.error(this.registerForm.controls['email'].value);
+              this.invalidEmails.push(
+                this.registerForm.controls['email'].value
+              );
+              this.registerForm.controls['email'].setValidators(
+                WrongEmail(this.invalidEmails)
+              );
+              this.registerForm.controls['email'].valueChanges;
+
+              this.registerForm.controls['email'].updateValueAndValidity();
+            }
           }
-          console.log('response', data);
         },
         (error) => {
-          console.log('error', error);
-          this.toastr.error('Something went wrong please try again later');
+          this.toastr.error('Ошибка, повторите попытку позже');
         }
       );
   }

@@ -1,4 +1,5 @@
 <section class="mb-3 ml3 mt-3">
+
   <header class="d-flex justify-content-center mb-2">
     <div>
       <span>
@@ -31,7 +32,7 @@
             <rect width="2" height="2" x="11" y="7" rx=".5" />
           </svg>
         </button>
-        список дел:
+        список задач:
         <strong>
           {{ dateService.date | async | moment: " Do MMMM YYYY" }}
         </strong>
@@ -39,7 +40,7 @@
     </div>
   </header>
 
-  <form (ngSubmit)="submit()" [formGroup]="form">
+  <form (ngSubmit)="submit()" [formGroup]="form" *ngIf="isAdmin">
     <div class="row justify-content-start">
       <div class="col-11">
         <input type="text" class="form-control" formControlName="title" />
@@ -68,7 +69,7 @@
           class="btn btn-outline-danger"
           (click)="remove(task.id)"
         >
-          Выполнено
+          {{ isAdmin ? "Удалить" : "Выполнено" }}
         </button>
       </li>
     </ul>
@@ -76,7 +77,7 @@
 
   <ng-template #noTasks>
     <div class="d-flex justify-content-center p-2 bd-highlight">
-      <p class="">заметок нет</p>
+      <p class="">задач нет</p>
     </div>
   </ng-template>
 </section>
