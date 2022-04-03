@@ -28,4 +28,5 @@ export class Task {
   title: string;
   date?: string | Date | moment.Moment;
   userId?: string;
+  completed: boolean;
 }

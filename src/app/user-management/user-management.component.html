@@ -6,7 +6,7 @@
     template: blockUiTemplateComponent
   "
 >
-  <h2 class="row justify-content-center pt-5">Задачи</h2>
+  <h2 class="row justify-content-center pt-5">Задачи сотрудников</h2>
   <div class="row justify-content-center pt-2">
     <div class="col-10">
       <table class="table table-success table-striped">
@@ -17,6 +17,7 @@
             <th scope="col">Почта</th>
             <th scope="col">Количество активных задач</th>
             <th scope="col">Количество выполненных задач</th>
+            <th scope="col">Права</th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +32,7 @@
             <td>{{ user.email }}</td>
             <td>{{ user.quantityNotes }}</td>
             <td>{{ "5" }}</td>
+            <td>{{ user.roles.join(", ") }}</td>
           </tr>
         </tbody>
       </table>

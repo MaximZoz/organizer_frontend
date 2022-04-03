@@ -71,6 +71,7 @@ export class OrganaizerComponent implements OnInit {
     const newTask = new Task();
     newTask.title = this.form.value.title;
     newTask.id = UUID();
+    newTask.completed = false;
     this.userService
       .create(newTask, date, this.selectedUserId)
       .subscribe((res) => {
@@ -96,6 +97,18 @@ export class OrganaizerComponent implements OnInit {
           (quantity) => quantity.id !== id
         );
         this.dateService.dayQuantities.next(dayQuantities);
+      }
+    });
+  }
+  success(id) {
+    this.userService.successTasks(id).subscribe((res) => {
+      if ((res.responseCode = ResponseCode.OK)) {
+        this.tasks.find((task) => task.id === id).completed = true;
+
+        // const dayQuantities = this.dateService.dayQuantities.value.filter(
+        //   (quantity) => quantity.id !== id
+        // );
+        // this.dateService.dayQuantities.next(dayQuantities);
       }
     });
   }
