@@ -9,7 +9,7 @@ import { Task, User } from 'src/app/Models/user';
 import { DateService } from 'src/app/services/date.service';
 import { UserService } from 'src/app/services/user.service';
 import { UUID } from '../../Helper/constants';
-
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 @Component({
   selector: 'app-organaizer',
   templateUrl: './organaizer.component.html',
@@ -24,6 +24,10 @@ export class OrganaizerComponent implements OnInit {
     public dateService: DateService,
     public userService: UserService
   ) {}
+
+  drop(event) {
+    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+  }
 
   get user(): User {
     return JSON.parse(localStorage.getItem(Constants.USER_KEY)) as User;
@@ -41,7 +45,6 @@ export class OrganaizerComponent implements OnInit {
 
   ngOnChanges() {
     if (!isUndefined(this.selectedUserId)) {
-      console.log('🚀 ~ this.selectedUserId', this.selectedUserId);
       this.dateService.date
         .pipe(
           switchMap((date: any) => {
@@ -52,7 +55,7 @@ export class OrganaizerComponent implements OnInit {
           })
         )
         .subscribe((tasks) => {
-          this.tasks = tasks;
+          this.tasks = tasks.filter((task) => !task.сonfirm);
         });
       this.getDayQuantitiesNow();
       this.form = new FormGroup({
@@ -80,9 +83,9 @@ export class OrganaizerComponent implements OnInit {
           newTask.date = this.dateService.date.value.format(
             'YYYY-MM-DDT00:00:00'
           );
-          this.tasks.push(newTask);
+          this.tasks.unshift(newTask);
           const dayQuantities = this.dateService.dayQuantities.value;
-          dayQuantities.push(newTask);
+          dayQuantities.unshift(newTask);
           this.dateService.dayQuantities.next(dayQuantities);
         }
       });
@@ -105,10 +108,10 @@ export class OrganaizerComponent implements OnInit {
       if ((res.responseCode = ResponseCode.OK)) {
         this.tasks.find((task) => task.id === id).completed = true;
 
-        // const dayQuantities = this.dateService.dayQuantities.value.filter(
-        //   (quantity) => quantity.id !== id
-        // );
-        // this.dateService.dayQuantities.next(dayQuantities);
+        const dayQuantities = this.dateService.dayQuantities.value;
+        dayQuantities.find((quantity) => quantity.id === id).completed = true;
+
+        this.dateService.dayQuantities.next(dayQuantities);
       }
     });
   }
@@ -120,8 +123,32 @@ export class OrganaizerComponent implements OnInit {
         this.selectedUserId
       )
       .subscribe((dayQuantities) => {
-        this.dayQuantities = dayQuantities;
-        this.dateService.dayQuantities.next(dayQuantities);
+        this.dayQuantities = dayQuantities.filter((task) => !task.сonfirm);
+        this.dateService.dayQuantities.next(this.dayQuantities);
       });
+  }
+  confirm(id) {
+    this.userService.confirmTasks(id).subscribe((res) => {
+      if ((res.responseCode = ResponseCode.OK)) {
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+
+        const dayQuantities = this.dateService.dayQuantities.value.filter(
+          (quantity) => quantity.id !== id
+        );
+        this.dateService.dayQuantities.next(dayQuantities);
+      }
+    });
+  }
+  refuse(id) {
+    this.userService.refuseTasks(id).subscribe((res) => {
+      if ((res.responseCode = ResponseCode.OK)) {
+        this.tasks.find((task) => task.id === id).completed = false;
+
+        const dayQuantities = this.dateService.dayQuantities.value;
+        dayQuantities.find((quantity) => quantity.id === id).completed = false;
+
+        this.dateService.dayQuantities.next(dayQuantities);
+      }
+    });
   }
 }

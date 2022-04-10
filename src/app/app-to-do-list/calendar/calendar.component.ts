@@ -12,13 +12,15 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class CalendarComponent implements OnInit {
   calendar: Week[];
-  dayQuantities = [];
+  dayQuantitiesCompleted = [];
+  dayQuantitiesNoCompleted = [];
 
   constructor(private dateService: DateService) {}
 
   ngOnInit() {
     this.dateService.dayQuantities.subscribe((dayQuantities) => {
-      this.dayQuantities = this.getDayQuantities(dayQuantities);
+      this.dayQuantitiesCompleted = this.getDayQuantitiesCompleted(dayQuantities);
+      this.dayQuantitiesNoCompleted = this.getDayQuantitiesNoCompleted(dayQuantities);
       this.dateService.date.subscribe(this.generate.bind(this));
     });
   }
@@ -39,12 +41,14 @@ export class CalendarComponent implements OnInit {
             const active = moment().isSame(value, 'date');
             const disabled = !now.isSame(value, 'M');
             const selected = now.isSame(value, 'date');
-            const quantity = this.dayQuantities.find(
-              (dayQuantities) =>
-                dayQuantities.day == value.format('DD') && !disabled
-            )?.dayQuantities;
+            const quantityCompleted = this.dayQuantitiesCompleted.find((dayQuantities) => {
+              return dayQuantities.day == value.format('DD') && !disabled;
+            })?.dayQuantities;
+            const quantityNoCompleted = this.dayQuantitiesNoCompleted.find((dayQuantities) => {
+              return dayQuantities.day == value.format('DD') && !disabled;
+            })?.dayQuantities;
 
-            return { value, active, disabled, selected, quantity };
+            return { value, active, disabled, selected, quantityCompleted, quantityNoCompleted };
           }),
       });
       this.calendar = calendar;
@@ -55,14 +59,27 @@ export class CalendarComponent implements OnInit {
     this.dateService.changeDate(day.value);
   }
 
-  getDayQuantities(dayQuantities) {
+  getDayQuantitiesCompleted(dayQuantities) {
     const groupdayQuantities = groupBy(dayQuantities, 'date');
 
     const groupdayQuantitiesMap = Object.entries(groupdayQuantities).map(
       (element) => {
         const container = {};
         container['day'] = moment(element[0]).format('DD');
-        container['dayQuantities'] = element[1].length;
+        container['dayQuantities'] = element[1].filter(element => element.completed).length;
+        return container;
+      }
+    );
+    return groupdayQuantitiesMap;
+  }
+  getDayQuantitiesNoCompleted(dayQuantities) {
+    const groupdayQuantities = groupBy(dayQuantities, 'date');
+
+    const groupdayQuantitiesMap = Object.entries(groupdayQuantities).map(
+      (element) => {
+        const container = {};
+        container['day'] = moment(element[0]).format('DD');
+        container['dayQuantities'] = element[1].filter(element => !element.completed).length;
         return container;
       }
     );

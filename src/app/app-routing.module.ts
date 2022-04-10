@@ -20,7 +20,6 @@ const routes: Routes = [
     component: AllUserManagementComponent,
     canActivate: [AuthGuardService],
   },
-
   {
     path: 'to-do-list',
     component: AppToDoListComponent,

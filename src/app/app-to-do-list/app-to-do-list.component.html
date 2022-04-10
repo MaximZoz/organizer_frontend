@@ -1,20 +1,20 @@
 <div class="container mt-5">
   <form [formGroup]="form" *ngIf="isAdmin">
     <div class="d-flex justify-content-center">
-        <label for="staticEmail" class="col-sm-1 col-form-label"
-          >Сотрудник:</label
-        >
-        <p class="col-sm-2">
-          <select formControlName="name" class="form-select">
-            <option
-              *ngFor="let user of userList; index as index"
-              [ngValue]="user"
-            >
-              {{ user.fullName }}
-            </option>
-          </select>
-        </p>
-      </div>
+      <label for="staticEmail" class="col-sm-1 col-form-label"
+        >Сотрудник:</label
+      >
+      <p class="col-sm-2">
+        <select formControlName="name" class="form-select">
+          <option
+            *ngFor="let user of userList; index as index"
+            [ngValue]="user"
+          >
+            {{ user.fullName }}
+          </option>
+        </select>
+      </p>
+    </div>
   </form>
 
   <header class="header">

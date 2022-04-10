@@ -67,6 +67,7 @@ export class UserService {
                     x.userName,
                     x.roles,
                     x.quantityNotes,
+                    x.quantityConfirmNotes,
                     x.id
                   )
                 );
@@ -98,6 +99,7 @@ export class UserService {
                     x.userName,
                     x.roles,
                     x.quantityNotes,
+                    x.quantityConfirmNotes,
                     x.id
                   )
                 );
@@ -167,7 +169,6 @@ export class UserService {
       );
   }
   public getTaskMonth(date, id?): Observable<Task[]> {
-    console.log('🚀 ~ id', id);
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     const headers = new HttpHeaders({
       Authorization: `Bearer ${userInfo?.token}`,
@@ -205,6 +206,29 @@ export class UserService {
     });
 
     return this.httpClient.put<any>(`${this.baseURL}SuccessTasks/${id}`, {
+      headers: headers,
+    });
+  }
+
+  public refuseTasks(id) {
+    let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${userInfo?.token}`,
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.httpClient.put<any>(`${this.baseURL}RefuseTasks/${id}`, {
+      headers: headers,
+    });
+  }
+  public confirmTasks(id) {
+    let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${userInfo?.token}`,
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.httpClient.put<any>(`${this.baseURL}ConfirmTasks/${id}`, {
       headers: headers,
     });
   }

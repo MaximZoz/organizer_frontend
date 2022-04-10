@@ -46,8 +46,8 @@ export class SelectorComponent implements OnInit, OnDestroy {
         this.selectedUserId
       )
       .subscribe((dayQuantities) => {
-        this.dayQuantities = dayQuantities;
-        this.dateService.dayQuantities.next(dayQuantities);
+        this.dayQuantities = dayQuantities.filter((task) => !task.сonfirm);
+        this.dateService.dayQuantities.next(this.dayQuantities);
       });
     this.subscriptions.push(userService$);
   }

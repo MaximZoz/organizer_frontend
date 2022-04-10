@@ -4,6 +4,7 @@ export class User {
   public userName: string = '';
   public roles: string[] = [];
   public quantityNotes: string = '';
+  public quantityConfirmNotes: string = '';
   public id: string = '';
 
   constructor(
@@ -12,6 +13,7 @@ export class User {
     userName: string,
     roles: string[],
     quantityNotes: string,
+    quantityConfirmNotes: string,
     id: string
   ) {
     this.fullName = fullName;
@@ -20,6 +22,7 @@ export class User {
     this.id = id;
     this.roles = roles;
     this.quantityNotes = quantityNotes;
+    this.quantityConfirmNotes = quantityConfirmNotes;
   }
 }
 
@@ -29,4 +32,5 @@ export class Task {
   date?: string | Date | moment.Moment;
   userId?: string;
   completed: boolean;
+  сonfirm = false;
 }

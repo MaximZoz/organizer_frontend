@@ -41,47 +41,96 @@
 
   <form (ngSubmit)="submit()" [formGroup]="form" *ngIf="isAdmin">
     <div class="row justify-content-start">
-      <div class="col-11">
+      <div class="col-10">
         <input type="text" class="form-control" formControlName="title" />
       </div>
-      <div class="col-1">
+      <div class="col-2">
         <button
           type="submit"
           class="btn btn-primary btn-block float-end"
           [disabled]="this.form.invalid"
         >
-          Добавить
+          Создать задачу
         </button>
       </div>
     </div>
   </form>
 
   <div class="list-group mt-3" *ngIf="tasks.length; else noTasks">
-    <ul class="list-group w-100">
-      <li
-        class="list-group-item d-flex justify-content-between align-items-center mt-1 "
+    <div
+      cdkDropList
+      class="list-group w-100"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div
+        class="list-group-item d-flex justify-content-between align-items-center mt-1"
         [ngClass]="{
-          'text-decoration-line-through list-group-item-success':
-            task.completed,
-          'list-group-item-primary': !task.completed
+          'text-decoration-line-through':
+            task.completed && !isAdmin,
+          'list-group-item-success': task.completed,
+          'list-group-item-primary': !task.completed,
+          cursor_move: isAdmin && !task.completed
         }"
-        *ngFor="let task of tasks | sort"
+        *ngFor="let task of tasks"
+        cdkDrag
       >
         {{ task.title }}
-        <button
-          *ngIf="!task.completed"
-          type="submit"
-          class="btn btn-outline-danger"
-          [ngClass]="{
-            'btn-outline-danger': isAdmin,
-            'btn-success': !isAdmin
-          }"
-          (click)="isAdmin ? remove(task.id) : success(task.id)"
-        >
-          {{ isAdmin ? "Удалить" : "Выполнено" }}
-        </button>
-      </li>
-    </ul>
+        <div>
+          <button
+            *ngIf="!task.completed"
+            type="submit"
+            class="btn btn-outline-danger"
+            [ngClass]="{
+              'btn-outline-danger': isAdmin,
+              'btn-success': !isAdmin
+            }"
+            (click)="isAdmin ? remove(task.id) : success(task.id)"
+          >
+            {{ isAdmin ? "Снять задачу" : "Выполнено" }}
+          </button>
+
+          <a
+            data-bs-toggle="tooltip"
+            title="задача ещё не проверена"
+            *ngIf="task.completed && !isAdmin"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-clock"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"
+              />
+              <path
+                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"
+              />
+            </svg>
+          </a>
+
+          <button
+            *ngIf="task.completed && isAdmin"
+            type="submit"
+            class="btn btn-success m-md-2"
+            (click)="confirm(task.id)"
+          >
+            Выполнено
+          </button>
+
+          <button
+            *ngIf="task.completed && isAdmin"
+            type="submit"
+            class="btn btn-danger"
+            (click)="refuse(task.id)"
+          >
+            Не выполнено
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <ng-template #noTasks>

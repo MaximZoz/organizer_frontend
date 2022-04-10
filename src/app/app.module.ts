@@ -21,6 +21,10 @@ import { SelectorComponent } from './app-to-do-list/selector/selector.component'
 import { OrganaizerComponent } from './app-to-do-list/organaizer/organaizer.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SortPipe } from './pipes/sort.pipe';
+import {MatNativeDateModule} from '@angular/material/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
+
 
 @NgModule({
   declarations: [
@@ -38,8 +42,10 @@ import { SortPipe } from './pipes/sort.pipe';
     SortPipe,
   ],
   imports: [
+    DragDropModule,
     OrganaizerModule,
     SelectorModule,
+    MatNativeDateModule,
     ToDoListModuleModule,
     BrowserModule,
     AppRoutingModule,

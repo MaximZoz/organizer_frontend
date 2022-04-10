@@ -3,13 +3,13 @@
     <table class="table">
       <thead class="table-light">
         <tr>
-          <th scope="col">Понедельник</th>
-          <th scope="col">Вторник</th>
-          <th scope="col">Среда</th>
-          <th scope="col">Четверг</th>
-          <th scope="col">Пятница</th>
-          <th scope="col">Суббота</th>
-          <th scope="col">Воскресенье</th>
+          <th scope="col">пн</th>
+          <th scope="col">вт</th>
+          <th scope="col">ср</th>
+          <th scope="col">чт</th>
+          <th scope="col">пт</th>
+          <th scope="col">сб</th>
+          <th scope="col">вс</th>
         </tr>
       </thead>
       <tbody>
@@ -21,16 +21,22 @@
             [class.active]="day.active"
             (click)="select(day)"
           >
-            <div class="ms-2 me-auto">
+            <div class="ms-2 me-auto position-relative">
               <span [class.selected]="day.selected" [class.active]="day.active">
                 {{ day.value | moment: "DD" }}
               </span>
-              <span
-                *ngIf="day?.quantity"
-                class="badge rounded-pill"
-                [ngClass]="{ 'bg-primary': false, 'bg-success': true }"
-                >{{ day?.quantity }}</span
-              >
+              <div class="d-flex flex-row positionBadge">
+                <span
+                  *ngIf="day?.quantityNoCompleted"
+                  class="badge rounded-pill bg-primary"
+                  >{{ day?.quantityNoCompleted }}</span
+                >
+                <span
+                  *ngIf="day?.quantityCompleted"
+                  class="badge rounded-pill bg-success"
+                  >{{ day?.quantityCompleted }}</span
+                >
+              </div>
             </div>
           </td>
         </tr>

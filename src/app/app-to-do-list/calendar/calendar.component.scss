@@ -33,10 +33,15 @@ table {
   .active {
     color: black;
     font-weight: bold;
-
   }
 
   .selected {
     color: blue;
   }
+}
+
+.positionBadge {
+  position: absolute !important;
+  top: -7px;
+  left: 73px;
 }
