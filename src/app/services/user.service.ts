@@ -113,6 +113,7 @@ export class UserService {
         })
       );
   }
+
   public getAllRole() {
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     const headers = new HttpHeaders({
@@ -140,6 +141,7 @@ export class UserService {
     const body = new Task();
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     body.title = task.title;
+    body.priority = task.priority;
     body.userId = isUndefined(id) ? userInfo.id : id;
     body.date = moment(date, 'DD.MM.YYYY').add(1, 'd').toDate();
     body.id = task.id;
@@ -168,6 +170,7 @@ export class UserService {
         })
       );
   }
+
   public getTaskMonth(date, id?): Observable<Task[]> {
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     const headers = new HttpHeaders({
@@ -221,6 +224,22 @@ export class UserService {
       headers: headers,
     });
   }
+
+  public priorityTasks(id, index) {
+    let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${userInfo?.token}`,
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.httpClient.put<any>(
+      `${this.baseURL}PriorityTasks/${id}/${index}`,
+      {
+        headers: headers,
+      }
+    );
+  }
+
   public confirmTasks(id) {
     let userInfo = JSON.parse(localStorage.getItem(Constants.USER_KEY));
     const headers = new HttpHeaders({

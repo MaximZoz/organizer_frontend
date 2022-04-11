@@ -27,6 +27,10 @@ export class OrganaizerComponent implements OnInit {
 
   drop(event) {
     moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+    this.tasks.forEach((task, idx) => {
+      this.userService.priorityTasks(task.id, idx + 1).subscribe();
+      return (task.priority = idx + 1);
+    });
   }
 
   get user(): User {
@@ -75,6 +79,7 @@ export class OrganaizerComponent implements OnInit {
     newTask.title = this.form.value.title;
     newTask.id = UUID();
     newTask.completed = false;
+    newTask.priority = this.tasks.length + 1;
     this.userService
       .create(newTask, date, this.selectedUserId)
       .subscribe((res) => {
@@ -83,9 +88,9 @@ export class OrganaizerComponent implements OnInit {
           newTask.date = this.dateService.date.value.format(
             'YYYY-MM-DDT00:00:00'
           );
-          this.tasks.unshift(newTask);
+          this.tasks.push(newTask);
           const dayQuantities = this.dateService.dayQuantities.value;
-          dayQuantities.unshift(newTask);
+          dayQuantities.push(newTask);
           this.dateService.dayQuantities.next(dayQuantities);
         }
       });

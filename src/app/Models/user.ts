@@ -33,4 +33,5 @@ export class Task {
   userId?: string;
   completed: boolean;
   сonfirm = false;
+  priority: number;
 }

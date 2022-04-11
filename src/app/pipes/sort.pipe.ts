@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import * as _ from 'lodash';
 import { toNumber } from 'lodash';
 
 @Pipe({
@@ -8,10 +9,7 @@ import { toNumber } from 'lodash';
 export class SortPipe implements PipeTransform {
   transform(value: any) {
     if (value.length !== 0) {
-      return value.sort((a, b) => {
-        if (!toNumber(a.title)) return -1;
-        return a.title - b.title;
-      });
+      return _.sortBy(value, 'priority');
     }
     return value;
   }

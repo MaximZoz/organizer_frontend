@@ -63,17 +63,27 @@
       (cdkDropListDropped)="drop($event)"
     >
       <div
-        class="list-group-item d-flex justify-content-between align-items-center mt-1"
+        class="list-group-item d-flex justify-content-between align-items-center mt-3 position-relative"
         [ngClass]="{
-          'text-decoration-line-through':
-            task.completed && !isAdmin,
+          'text-decoration-line-through': task.completed && !isAdmin,
           'list-group-item-success': task.completed,
           'list-group-item-primary': !task.completed,
           cursor_move: isAdmin && !task.completed
         }"
-        *ngFor="let task of tasks"
+        *ngFor="let task of tasks | sort"
         cdkDrag
       >
+        <span
+          class="position-absolute top-0 start-0 translate-middle badge rounded-pill"
+          [ngClass]="{
+            'bg-danger': task.priority < 2,
+            'bg-warning': task.priority < 4 && task.priority >= 2,
+            'bg-secondary': task.priority >= 4
+          }"
+        >
+          {{ task.priority }}
+          <span class="visually-hidden">unread messages</span>
+        </span>
         {{ task.title }}
         <div>
           <button
